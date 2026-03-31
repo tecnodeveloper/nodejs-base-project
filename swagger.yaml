@@ -1,0 +1,29 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "My Api",
+    "version": "1.0.0"
+  },
+
+  "paths": {
+    "/": {
+      "get": {
+        "summary": "Welcome dashboard",
+        "description": "Welcome message of dashboard to check api working",
+        "response": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "String",
+                  "example": "Welcome to Api"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -49,9 +49,7 @@ docker run -p 3000:3000 --name bookstore-backend nodejs-base-project
 
 Open:
 
-```
-http://localhost:3000/health
-```
+`http://localhost:3000/health`
 
 ## Cleanup
 
