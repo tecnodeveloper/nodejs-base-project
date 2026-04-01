@@ -4,7 +4,10 @@ import swaggerDocument from './swagger.json' with { type: 'json' };
 const PORT = 3000;
 const app = express();
 app.get('/health', (req, res) => {
-  res.send({ message: 'Healthy gamers' });
+  res.send({ message: 'Site is healthy.' });
 });
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.listen(PORT);
+app.post('/book', (req, res) => {
+  res.send();
+});
