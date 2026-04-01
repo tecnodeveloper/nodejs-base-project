@@ -4,19 +4,18 @@
     "title": "My Api",
     "version": "1.0.0"
   },
-
   "paths": {
     "/": {
       "get": {
         "summary": "Welcome dashboard",
         "description": "Welcome message of dashboard to check api working",
-        "response": {
+        "responses": {
           "200": {
             "description": "Successful response",
             "content": {
               "text/plain": {
                 "schema": {
-                  "type": "String",
+                  "type": "string",
                   "example": "Welcome to Api"
                 }
               }
