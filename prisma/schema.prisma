@@ -1,12 +1,9 @@
-
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "sqlite"
-
 }
 
 model User { 
@@ -14,7 +11,7 @@ model User {
   email String  @unique
   name  String?
   posts Post[]
-} 
+}
 
 model Post { 
   id        Int     @id @default(autoincrement()) 
@@ -26,9 +23,14 @@ model Post {
 } 
 model Book {
   id Int @id @default(autoincrement())
+  bookName String @default("-")
+  author Author[] 
+  price Float @default(0)
+  publisher String? @default("-")
+}
+
+model Author{
+  id Int @id @default(autoincrement())
   name String
-  author String
-  price Float
-  publisher String
-  coauthor String
+  books Book[]
 }
