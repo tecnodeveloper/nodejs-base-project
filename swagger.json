@@ -23,22 +23,57 @@
           }
         }
       }
-    }
-  },
-  "path2": {
-    "/health": {
-      "get": {
-        "summary": "Welcome dashboard",
-        "description": "Welcome message of dashboard to check api working",
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string",
-                  "example": "Welcome to Api"
+    },
+    "/api/book": {
+      "post": {
+        "summary": "Creating Book in database",
+        "description": "When you hit this route you need to give json input body of data that you want to store on database ",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["bookName", "author", "price", "publisher"],
+                "properties": {
+                  "bookName": {
+                    "type": "string",
+                    "example": "Atomic Habbits"
+                  },
+                  "author": {
+                    "type": "array",
+                    "'items": { "type": "string" },
+                    "example": ["james clear"]
+                  },
+                  "price": {
+                    "type": "number",
+                    "example": "100"
+                  },
+                  "publisher": {
+                    "type": "string",
+                    "example": "Hamdard publisher"
+                  }
                 }
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "201": {
+        "description": "Book Created succesfully",
+        "content": {
+          "application/json": {
+            "example": {
+              "messaage": "Book created succesfully",
+              "data": {
+                "id": 1,
+                "bookName": "Atomic Habbit",
+                "price": 100,
+                "author": [
+                  "name" : "james clear",
+                ]
               }
             }
           }

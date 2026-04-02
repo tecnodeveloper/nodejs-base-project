@@ -1,19 +1,18 @@
 import express from 'express';
+import path from 'path';
 
 import { PrismaClient } from '@prisma/client';
 import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3';
 const adapter = new PrismaBetterSqlite3({
-  url: 'file:./dev.db',
+  url: `file:${path.resolve('dev.db')}`,
 });
-
 export const prisma = new PrismaClient({ adapter });
-
-// const prisma = new PrismaClient();
 const router = express.Router();
+
 export default router.post('/book', async (req, res) => {
   const userData = req.body;
-  const { id, bookName, author, price, publisher } = userData;
-  console.log(id, bookName, author, price, publisher);
+  const { bookName, author, price, publisher } = userData;
+  console.log(bookName, author, price, publisher);
   if (!bookName || bookName.trim() === '') {
     return res.status(400).json({
       message: 'Book name is not correct',
@@ -23,7 +22,7 @@ export default router.post('/book', async (req, res) => {
 
   const existingBook = await prisma.book.findFirst({
     where: {
-      bookName: bookName,
+      bookName,
     },
   });
   if (existingBook) {
@@ -36,13 +35,15 @@ export default router.post('/book', async (req, res) => {
       message: 'Price must be greater than 0',
     });
   }
-  const newBook = await prisma.Book.create({
+  console.log();
+  const newBook = await prisma.book.create({
     data: {
-      id,
       bookName,
-      author,
       price,
       publisher,
+      author: {
+        create: author.map((name) => ({ name })),
+      },
     },
   });
   return res.status(201).json({

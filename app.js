@@ -1,8 +1,7 @@
 import express from 'express';
 import swaggerUi from 'swagger-ui-express';
-// import YAML from 'yamljs';
 import swaggerDocument from './swagger.json' with { type: 'json' };
-// import swaggerDocument from YAML.load('./swagger.yaml');
+
 import router from './src/routes/createBook.js';
 const PORT = 3000;
 const app = express();
