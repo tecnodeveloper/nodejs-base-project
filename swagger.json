@@ -24,5 +24,26 @@
         }
       }
     }
+  },
+  "path2": {
+    "/health": {
+      "get": {
+        "summary": "Welcome dashboard",
+        "description": "Welcome message of dashboard to check api working",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "example": "Welcome to Api"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }
