@@ -42,12 +42,12 @@
                   },
                   "author": {
                     "type": "array",
-                    "'items": { "type": "string" },
+                    "items": { "type": "string" },
                     "example": ["james clear"]
                   },
                   "price": {
                     "type": "number",
-                    "example": "100"
+                    "example": 100
                   },
                   "publisher": {
                     "type": "string",
@@ -57,23 +57,119 @@
               }
             }
           }
+        },
+
+        "responses": {
+          "201": {
+            "description": "Book Created succesfully",
+            "content": {
+              "application/json": {
+                "example": {
+                  "messaage": "Book created succesfully",
+                  "data": {
+                    "id": 1,
+                    "bookName": "Atomic Habbit",
+                    "price": 100,
+                    "author": [{ "name": "james clear" }],
+                    "publisher": "Humdard publisher"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error ",
+            "content": {
+              "application/json": {
+                "example": {
+                  "messaage": "Invalid input"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "messaage": "Internal Server Error"
+                }
+              }
+            }
+          }
         }
       }
     },
-    "responses": {
-      "201": {
-        "description": "Book Created succesfully",
-        "content": {
-          "application/json": {
-            "example": {
-              "messaage": "Book created succesfully",
-              "data": {
-                "id": 1,
-                "bookName": "Atomic Habbit",
-                "price": 100,
-                "author": [
-                  "name" : "james clear",
-                ]
+    "/api/book/:param": {
+      "put": {
+        "summary": "Updating Book in database",
+        "description": "When you hit this route you need to give updated json input body of data that you want to store on database ",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["bookName", "author", "price", "publisher"],
+                "properties": {
+                  "bookName": {
+                    "type": "string",
+                    "example": "Atomic Habbits"
+                  },
+                  "author": {
+                    "type": "array",
+                    "items": { "type": "string" },
+                    "example": ["james clear"]
+                  },
+                  "price": {
+                    "type": "number",
+                    "example": 100
+                  },
+                  "publisher": {
+                    "type": "string",
+                    "example": "Hamdard publisher"
+                  }
+                }
+              }
+            }
+          }
+        },
+
+        "responses": {
+          "201": {
+            "description": "Book Created succesfully",
+            "content": {
+              "application/json": {
+                "example": {
+                  "messaage": "Book created succesfully",
+                  "data": {
+                    "id": 1,
+                    "bookName": "Atomic Habbit",
+                    "price": 100,
+                    "author": [{ "name": "james clear" }],
+                    "publisher": "Humdard publisher"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error ",
+            "content": {
+              "application/json": {
+                "example": {
+                  "messaage": "Invalid input"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "messaage": "Internal Server Error"
+                }
               }
             }
           }

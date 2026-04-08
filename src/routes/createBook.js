@@ -1,5 +1,7 @@
 import express from 'express';
 import path from 'path';
+import { bookUpdatedData } from '../controllers/updateController.js';
+import { BookCreate } from '../controllers/createController.js';
 
 import { PrismaClient } from '@prisma/client';
 import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3';
@@ -8,46 +10,18 @@ const adapter = new PrismaBetterSqlite3({
 });
 export const prisma = new PrismaClient({ adapter });
 const router = express.Router();
+const checkBookExist = async (req, res, next) => {
+  const book = await prisma.book.findUnique({
+    where: { id: Number(req.params.param) },
+  });
+  if (!book) {
+    res.status(404).json({ message: 'Book not found' });
+  }
+  req.book = book;
+  next();
+};
 
-export default router.post('/book', async (req, res) => {
-  const userData = req.body;
-  const { bookName, author, price, publisher } = userData;
-  console.log(bookName, author, price, publisher);
-  if (!bookName || bookName.trim() === '') {
-    return res.status(400).json({
-      message: 'Book name is not correct',
-    });
-  }
-  console.log(await prisma.book.findFirst());
+router.post('/book', BookCreate);
+router.put('/book/:param', checkBookExist, bookUpdatedData);
 
-  const existingBook = await prisma.book.findFirst({
-    where: {
-      bookName,
-    },
-  });
-  if (existingBook) {
-    return res.status(400).json({
-      message: 'Book name already exist',
-    });
-  }
-  if (price <= 0) {
-    return res.status(400).json({
-      message: 'Price must be greater than 0',
-    });
-  }
-  console.log();
-  const newBook = await prisma.book.create({
-    data: {
-      bookName,
-      price,
-      publisher,
-      author: {
-        create: author.map((name) => ({ name })),
-      },
-    },
-  });
-  return res.status(201).json({
-    message: 'User created successfully',
-    data: newBook,
-  });
-});
+export default router;
