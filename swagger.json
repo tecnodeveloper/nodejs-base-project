@@ -175,6 +175,143 @@
           }
         }
       }
+    },
+    "/api/book": {
+      "get": {
+        "summary": "Read all book",
+        "description": "When you hit this route you will get all the data that have been stored on database",
+
+        "responses": {
+          "201": {
+            "description": "Book Shown succesfully",
+            "content": {
+              "application/json": {
+                "example": {
+                  "messaage": "Book SHown succesfully",
+                  "data": {
+                    "id": 1,
+                    "bookName": "Atomic Habbit",
+                    "price": 100,
+                    "author": [{ "name": "james clear" }],
+                    "publisher": "Humdard publisher"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error ",
+            "content": {
+              "application/json": {
+                "example": {
+                  "messaage": "Invalid input"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "messaage": "Internal Server Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/book/:param": {
+      "get": {
+        "summary": "Read book by using id",
+        "description": "When you hit this route will get data from database according to your id ",
+
+        "responses": {
+          "200": {
+            "description": "Book Shown succesfully",
+            "content": {
+              "application/json": {
+                "example": {
+                  "messaage": "Book SHown succesfully",
+                  "data": {
+                    "id": 1,
+                    "bookName": "Atomic Habbit",
+                    "price": 100,
+                    "author": [{ "name": "james clear" }],
+                    "publisher": "Humdard publisher"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error ",
+            "content": {
+              "application/json": {
+                "example": {
+                  "messaage": "Invalid input"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "messaage": "Internal Server Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/book/:param": {
+      "delete": {
+        "summary": "Delete book by using id",
+        "description": "When you hit this route the book with id deleted record from database",
+        "responses": {
+          "201": {
+            "description": "Book Deleted succesfully",
+            "content": {
+              "application/json": {
+                "example": {
+                  "messaage": "Book Deleted succesfully",
+                  "data": {
+                    "id": 1,
+                    "bookName": "Atomic Habbit",
+                    "price": 100,
+                    "author": [{ "name": "james clear" }],
+                    "publisher": "Humdard publisher"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error ",
+            "content": {
+              "application/json": {
+                "example": {
+                  "messaage": "Invalid input"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "messaage": "Internal Server Error"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
