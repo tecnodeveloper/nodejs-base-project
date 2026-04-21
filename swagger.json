@@ -1,14 +1,14 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "My Api",
+    "title": "My API",
     "version": "1.0.0"
   },
   "paths": {
     "/": {
       "get": {
         "summary": "Welcome dashboard",
-        "description": "Welcome message of dashboard to check api working",
+        "description": "Check if API is working",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -24,243 +24,108 @@
         }
       }
     },
+
     "/api/book": {
       "post": {
-        "summary": "Creating Book in database",
-        "description": "When you hit this route you need to give json input body of data that you want to store on database ",
+        "summary": "Create a new book",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "required": ["bookName", "author", "price", "publisher"],
-                "properties": {
-                  "bookName": {
-                    "type": "string",
-                    "example": "Atomic Habbits"
-                  },
-                  "author": {
-                    "type": "array",
-                    "items": { "type": "string" },
-                    "example": ["james clear"]
-                  },
-                  "price": {
-                    "type": "number",
-                    "example": 100
-                  },
-                  "publisher": {
-                    "type": "string",
-                    "example": "Hamdard publisher"
-                  }
-                }
+                "$ref": "#/components/schemas/CreateBook"
               }
             }
           }
         },
-
         "responses": {
           "201": {
-            "description": "Book Created succesfully",
+            "description": "Book created successfully",
             "content": {
               "application/json": {
                 "example": {
-                  "messaage": "Book created succesfully",
+                  "message": "Book created successfully",
                   "data": {
                     "id": 1,
-                    "bookName": "Atomic Habbit",
+                    "bookName": "Atomic Habits",
                     "price": 100,
-                    "author": [{ "name": "james clear" }],
-                    "publisher": "Humdard publisher"
+                    "author": [{ "name": "James Clear" }],
+                    "publisher": "Hamdard"
                   }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Validation error ",
-            "content": {
-              "application/json": {
-                "example": {
-                  "messaage": "Invalid input"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Server error",
-            "content": {
-              "application/json": {
-                "example": {
-                  "messaage": "Internal Server Error"
                 }
               }
             }
           }
         }
-      }
-    },
-    "/api/book/:param": {
-      "put": {
-        "summary": "Updating Book in database",
-        "description": "When you hit this route you need to give updated json input body of data that you want to store on database ",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "required": ["bookName", "author", "price", "publisher"],
-                "properties": {
-                  "bookName": {
-                    "type": "string",
-                    "example": "Atomic Habbits"
-                  },
-                  "author": {
-                    "type": "array",
-                    "items": { "type": "string" },
-                    "example": ["james clear"]
-                  },
-                  "price": {
-                    "type": "number",
-                    "example": 100
-                  },
-                  "publisher": {
-                    "type": "string",
-                    "example": "Hamdard publisher"
-                  }
-                }
-              }
-            }
-          }
-        },
+      },
 
-        "responses": {
-          "201": {
-            "description": "Book Created succesfully",
-            "content": {
-              "application/json": {
-                "example": {
-                  "messaage": "Book created succesfully",
-                  "data": {
-                    "id": 1,
-                    "bookName": "Atomic Habbit",
-                    "price": 100,
-                    "author": [{ "name": "james clear" }],
-                    "publisher": "Humdard publisher"
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Validation error ",
-            "content": {
-              "application/json": {
-                "example": {
-                  "messaage": "Invalid input"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Server error",
-            "content": {
-              "application/json": {
-                "example": {
-                  "messaage": "Internal Server Error"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/book": {
       "get": {
-        "summary": "Read all book",
-        "description": "When you hit this route you will get all the data that have been stored on database",
-
-        "responses": {
-          "201": {
-            "description": "Book Shown succesfully",
-            "content": {
-              "application/json": {
-                "example": {
-                  "messaage": "Book SHown succesfully",
-                  "data": {
-                    "id": 1,
-                    "bookName": "Atomic Habbit",
-                    "price": 100,
-                    "author": [{ "name": "james clear" }],
-                    "publisher": "Humdard publisher"
-                  }
-                }
-              }
-            }
+        "summary": "Get all books (with filters)",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": { "type": "integer", "example": 1 }
           },
-          "400": {
-            "description": "Validation error ",
-            "content": {
-              "application/json": {
-                "example": {
-                  "messaage": "Invalid input"
-                }
-              }
-            }
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": { "type": "integer", "example": 5 }
           },
-          "500": {
-            "description": "Server error",
-            "content": {
-              "application/json": {
-                "example": {
-                  "messaage": "Internal Server Error"
-                }
-              }
-            }
+          {
+            "name": "author",
+            "in": "query",
+            "schema": { "type": "string", "example": "Zain Ali" }
+          },
+          {
+            "name": "minPrice",
+            "in": "query",
+            "schema": { "type": "number", "example": 50 }
+          },
+          {
+            "name": "maxPrice",
+            "in": "query",
+            "schema": { "type": "number", "example": 200 }
           }
-        }
-      }
-    },
-    "/api/book/:param": {
-      "get": {
-        "summary": "Read book by using id",
-        "description": "When you hit this route will get data from database according to your id ",
-
+        ],
         "responses": {
           "200": {
-            "description": "Book Shown succesfully",
+            "description": "Books fetched successfully",
             "content": {
               "application/json": {
-                "example": {
-                  "messaage": "Book SHown succesfully",
-                  "data": {
-                    "id": 1,
-                    "bookName": "Atomic Habbit",
-                    "price": 100,
-                    "author": [{ "name": "james clear" }],
-                    "publisher": "Humdard publisher"
+                "examples": {
+                  "pagination": {
+                    "value": {
+                      "total": 20,
+                      "page": 1,
+                      "limit": 5,
+                      "data": [
+                        {
+                          "id": 1,
+                          "bookName": "Atomic Habits",
+                          "price": 100,
+                          "author": [{ "name": "James Clear" }],
+                          "publisher": "Hamdard"
+                        }
+                      ]
+                    }
+                  },
+                  "filtered": {
+                    "value": {
+                      "total": 2,
+                      "page": 1,
+                      "limit": 5,
+                      "data": [
+                        {
+                          "id": 3,
+                          "bookName": "Deep Work",
+                          "price": 150,
+                          "author": [{ "name": "Zain Ali" }],
+                          "publisher": "XYZ"
+                        }
+                      ]
+                    }
                   }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Validation error ",
-            "content": {
-              "application/json": {
-                "example": {
-                  "messaage": "Invalid input"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Server error",
-            "content": {
-              "application/json": {
-                "example": {
-                  "messaage": "Internal Server Error"
                 }
               }
             }
@@ -268,47 +133,109 @@
         }
       }
     },
-    "/api/book/:param": {
-      "delete": {
-        "summary": "Delete book by using id",
-        "description": "When you hit this route the book with id deleted record from database",
+
+    "/api/book/{id}": {
+      "get": {
+        "summary": "Get book by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "example": 1 }
+          }
+        ],
         "responses": {
-          "201": {
-            "description": "Book Deleted succesfully",
+          "200": {
+            "description": "Book fetched successfully",
             "content": {
               "application/json": {
                 "example": {
-                  "messaage": "Book Deleted succesfully",
+                  "message": "Book fetched successfully",
                   "data": {
                     "id": 1,
-                    "bookName": "Atomic Habbit",
+                    "bookName": "Atomic Habits",
                     "price": 100,
-                    "author": [{ "name": "james clear" }],
-                    "publisher": "Humdard publisher"
+                    "author": [{ "name": "James Clear" }],
+                    "publisher": "Hamdard"
                   }
                 }
               }
             }
-          },
-          "400": {
-            "description": "Validation error ",
-            "content": {
-              "application/json": {
-                "example": {
-                  "messaage": "Invalid input"
-                }
+          }
+        }
+      },
+
+      "put": {
+        "summary": "Update book",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "example": 1 }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBook"
               }
             }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Book updated successfully"
+          }
+        }
+      },
+
+      "delete": {
+        "summary": "Delete book",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "example": 1 }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Book deleted successfully"
+          }
+        }
+      }
+    }
+  },
+
+  "components": {
+    "schemas": {
+      "CreateBook": {
+        "type": "object",
+        "required": ["bookName", "author", "price"],
+        "properties": {
+          "bookName": {
+            "type": "string",
+            "example": "Atomic Habits"
           },
-          "500": {
-            "description": "Server error",
-            "content": {
-              "application/json": {
-                "example": {
-                  "messaage": "Internal Server Error"
-                }
-              }
-            }
+          "author": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": ["James Clear"]
+          },
+          "price": {
+            "type": "number",
+            "example": 100
+          },
+          "publisher": {
+            "type": "string",
+            "example": "Hamdard"
           }
         }
       }

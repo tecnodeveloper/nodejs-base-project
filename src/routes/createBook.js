@@ -2,7 +2,11 @@ import express from 'express';
 import path from 'path';
 import { bookUpdatedData } from '../controllers/updateController.js';
 import { BookCreate } from '../controllers/createController.js';
-import { readBook, readAllBook } from '../controllers/readController.js';
+import {
+  readBook,
+  readAllBook,
+  readBookCondition,
+} from '../controllers/readController.js';
 import { deleteBook } from '../controllers/deleteController.js';
 import { PrismaClient } from '@prisma/client';
 import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3';
@@ -24,6 +28,7 @@ const checkBookExist = async (req, res, next) => {
   next();
 };
 
+router.get('/books', readBookCondition);
 router.post('/book', BookCreate);
 router.patch('/book/:param', checkBookExist, bookUpdatedData);
 router.get('/book', readAllBook);

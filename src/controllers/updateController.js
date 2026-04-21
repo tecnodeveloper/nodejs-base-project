@@ -9,12 +9,12 @@ export const bookUpdatedData = async (req, res) => {
   console.log(req.body);
   console.log(bookName, author, price, publisher);
 
-  // if (bookName !== 'string') {
-  //   return res.status(400).json({ message: 'Please change book Name' });
-  // }
   if (price <= 0) {
     return res.status(400).json({ message: 'Price should be greater than 0' });
   }
+  // if (bookName !== 'string') {
+  //   return res.status(400).json({ message: 'Please change book Name' });
+  // }
   // if (typeof publisher !== 'string') {
   //   return res
   //     .status(400)
