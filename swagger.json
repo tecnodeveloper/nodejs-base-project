@@ -1,23 +1,150 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "My API",
-    "version": "1.0.0"
+    "title": "Book API",
+    "version": "1.0.0",
+    "description": "API with logging and centralized error handling"
   },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+
+    "schemas": {
+      "CreateBook": {
+        "type": "object",
+        "required": ["bookName", "author", "price"],
+        "properties": {
+          "bookName": {
+            "type": "string",
+            "example": "Atomic Habits"
+          },
+          "author": {
+            "type": "array",
+            "items": { "type": "string" },
+            "example": ["James Clear"]
+          },
+          "price": {
+            "type": "number",
+            "example": 100
+          },
+          "publisher": {
+            "type": "string",
+            "example": "Hamdard"
+          }
+        }
+      },
+
+      "Auth": {
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "user@example.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "123456"
+          }
+        }
+      },
+
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": false
+          },
+          "message": {
+            "type": "string",
+            "example": "Something went wrong"
+          }
+        }
+      }
+    },
+
+    "responses": {
+      "BadRequest": {
+        "description": "Validation Error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            },
+            "example": {
+              "success": false,
+              "message": "Validation failed"
+            }
+          }
+        }
+      },
+
+      "Unauthorized": {
+        "description": "Unauthorized",
+        "content": {
+          "application/json": {
+            "example": {
+              "success": false,
+              "message": "Unauthorized access"
+            }
+          }
+        }
+      },
+
+      "NotFound": {
+        "description": "Resource Not Found",
+        "content": {
+          "application/json": {
+            "example": {
+              "success": false,
+              "message": "Record not found"
+            }
+          }
+        }
+      },
+
+      "Conflict": {
+        "description": "Duplicate Record",
+        "content": {
+          "application/json": {
+            "example": {
+              "success": false,
+              "message": "Duplicate record"
+            }
+          }
+        }
+      },
+
+      "ServerError": {
+        "description": "Internal Server Error",
+        "content": {
+          "application/json": {
+            "example": {
+              "success": false,
+              "message": "Internal Server Error"
+            }
+          }
+        }
+      }
+    }
+  },
+
   "paths": {
     "/": {
       "get": {
         "summary": "Welcome dashboard",
-        "description": "Check if API is working",
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Success",
             "content": {
               "text/plain": {
-                "schema": {
-                  "type": "string",
-                  "example": "Welcome to Api"
-                }
+                "example": "Welcome to dashboard"
               }
             }
           }
@@ -25,9 +152,74 @@
       }
     },
 
+    "/auth/register": {
+      "post": {
+        "summary": "Register user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Auth"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User registered successfully"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+
+    "/auth/login": {
+      "post": {
+        "summary": "Login user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Auth"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "JWT token",
+            "content": {
+              "application/json": {
+                "example": {
+                  "token": "your.jwt.token"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+
     "/api/book": {
       "post": {
-        "summary": "Create a new book",
+        "summary": "Create book",
+        "security": [{ "BearerAuth": [] }],
         "requestBody": {
           "required": true,
           "content": {
@@ -40,95 +232,38 @@
         },
         "responses": {
           "201": {
-            "description": "Book created successfully",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "Book created successfully",
-                  "data": {
-                    "id": 1,
-                    "bookName": "Atomic Habits",
-                    "price": 100,
-                    "author": [{ "name": "James Clear" }],
-                    "publisher": "Hamdard"
-                  }
-                }
-              }
-            }
+            "description": "Book created successfully"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
           }
         }
       },
 
       "get": {
-        "summary": "Get all books (with filters)",
+        "summary": "Get all books",
         "parameters": [
-          {
-            "name": "page",
-            "in": "query",
-            "schema": { "type": "integer", "example": 1 }
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "schema": { "type": "integer", "example": 5 }
-          },
-          {
-            "name": "author",
-            "in": "query",
-            "schema": { "type": "string", "example": "Zain Ali" }
-          },
-          {
-            "name": "minPrice",
-            "in": "query",
-            "schema": { "type": "number", "example": 50 }
-          },
-          {
-            "name": "maxPrice",
-            "in": "query",
-            "schema": { "type": "number", "example": 200 }
-          }
+          { "name": "page", "in": "query", "schema": { "type": "integer" } },
+          { "name": "limit", "in": "query", "schema": { "type": "integer" } },
+          { "name": "author", "in": "query", "schema": { "type": "string" } },
+          { "name": "minPrice", "in": "query", "schema": { "type": "number" } },
+          { "name": "maxPrice", "in": "query", "schema": { "type": "number" } }
         ],
         "responses": {
           "200": {
-            "description": "Books fetched successfully",
-            "content": {
-              "application/json": {
-                "examples": {
-                  "pagination": {
-                    "value": {
-                      "total": 20,
-                      "page": 1,
-                      "limit": 5,
-                      "data": [
-                        {
-                          "id": 1,
-                          "bookName": "Atomic Habits",
-                          "price": 100,
-                          "author": [{ "name": "James Clear" }],
-                          "publisher": "Hamdard"
-                        }
-                      ]
-                    }
-                  },
-                  "filtered": {
-                    "value": {
-                      "total": 2,
-                      "page": 1,
-                      "limit": 5,
-                      "data": [
-                        {
-                          "id": 3,
-                          "bookName": "Deep Work",
-                          "price": 150,
-                          "author": [{ "name": "Zain Ali" }],
-                          "publisher": "XYZ"
-                        }
-                      ]
-                    }
-                  }
-                }
-              }
-            }
+            "description": "Books fetched successfully"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
           }
         }
       }
@@ -142,42 +277,34 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "schema": { "type": "integer", "example": 1 }
+            "schema": { "type": "integer" }
           }
         ],
         "responses": {
           "200": {
-            "description": "Book fetched successfully",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "Book fetched successfully",
-                  "data": {
-                    "id": 1,
-                    "bookName": "Atomic Habits",
-                    "price": 100,
-                    "author": [{ "name": "James Clear" }],
-                    "publisher": "Hamdard"
-                  }
-                }
-              }
-            }
+            "description": "Book fetched"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
           }
         }
       },
 
       "put": {
         "summary": "Update book",
+        "security": [{ "BearerAuth": [] }],
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "schema": { "type": "integer", "example": 1 }
+            "schema": { "type": "integer" }
           }
         ],
         "requestBody": {
-          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -188,54 +315,46 @@
         },
         "responses": {
           "200": {
-            "description": "Book updated successfully"
+            "description": "Updated successfully"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
           }
         }
       },
 
       "delete": {
         "summary": "Delete book",
+        "security": [{ "BearerAuth": [] }],
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "schema": { "type": "integer", "example": 1 }
+            "schema": { "type": "integer" }
           }
         ],
         "responses": {
           "200": {
-            "description": "Book deleted successfully"
-          }
-        }
-      }
-    }
-  },
-
-  "components": {
-    "schemas": {
-      "CreateBook": {
-        "type": "object",
-        "required": ["bookName", "author", "price"],
-        "properties": {
-          "bookName": {
-            "type": "string",
-            "example": "Atomic Habits"
+            "description": "Deleted successfully"
           },
-          "author": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "example": ["James Clear"]
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
           },
-          "price": {
-            "type": "number",
-            "example": 100
+          "404": {
+            "$ref": "#/components/responses/NotFound"
           },
-          "publisher": {
-            "type": "string",
-            "example": "Hamdard"
+          "500": {
+            "$ref": "#/components/responses/ServerError"
           }
         }
       }

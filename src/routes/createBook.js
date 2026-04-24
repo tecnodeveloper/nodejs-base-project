@@ -25,7 +25,7 @@ const checkBookExist = async (req, res, next) => {
     where: { id: Number(req.params.param) },
   });
   if (!book) {
-    res.status(404).json({ message: 'Book not found' });
+    return res.status(404).json({ message: 'Book not found' });
   }
   req.book = book;
   next();
