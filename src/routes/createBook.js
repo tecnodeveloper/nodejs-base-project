@@ -6,10 +6,13 @@ import {
   readBook,
   readAllBook,
   readBookCondition,
+  searchBook,
 } from '../controllers/readController.js';
+import { loginUser, registerUser } from '../controllers/userController.js';
 import { deleteBook } from '../controllers/deleteController.js';
 import { PrismaClient } from '@prisma/client';
 import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3';
+import { authMiddleware } from '../middlewares/authMiddleware.js';
 
 const adapter = new PrismaBetterSqlite3({
   url: `file:${path.resolve('dev.db')}`,
@@ -29,7 +32,10 @@ const checkBookExist = async (req, res, next) => {
 };
 
 router.get('/books', readBookCondition);
-router.post('/book', BookCreate);
+router.get('/books/search', searchBook);
+router.post('/book', authMiddleware, BookCreate);
+router.post('/auth/register', registerUser);
+router.post('/auth/login', loginUser);
 router.patch('/book/:param', checkBookExist, bookUpdatedData);
 router.get('/book', readAllBook);
 router.get('/book/:param', checkBookExist, readBook);

@@ -49,7 +49,6 @@ export const readBookCondition = async (req, res) => {
         },
       };
     }
-
     const [items, totalCount] = await prisma.$transaction([
       prisma.book.findMany({
         where,
@@ -69,5 +68,51 @@ export const readBookCondition = async (req, res) => {
     });
   } catch (err) {
     res.status(500).json({ error: err.message });
+  }
+};
+export const searchBook = async (req, res) => {
+  try {
+    const { q } = req.query;
+
+    // Handle empty query
+    if (!q || q.trim() === '') {
+      return res.status(400).json({
+        message: 'Search query (q) is required',
+      });
+    }
+
+    const searchTerm = q.trim();
+
+    const books = await prisma.book.findMany({
+      where: {
+        OR: [
+          {
+            bookName: {
+              contains: searchTerm,
+              // mode: 'insensitive' not supported on SQLite
+            },
+          },
+          {
+            author: {
+              some: {
+                name: {
+                  contains: searchTerm,
+                },
+              },
+            },
+          },
+        ],
+      },
+      include: {
+        author: true, // include author data in response
+      },
+    });
+
+    return res.status(200).json(books);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      message: 'Internal server error',
+    });
   }
 };
