@@ -1,81 +1,360 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "My Api",
-    "version": "1.0.0"
+    "title": "Book API",
+    "version": "1.0.0",
+    "description": "API with logging and centralized error handling"
   },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+
+    "schemas": {
+      "CreateBook": {
+        "type": "object",
+        "required": ["bookName", "author", "price"],
+        "properties": {
+          "bookName": {
+            "type": "string",
+            "example": "Atomic Habits"
+          },
+          "author": {
+            "type": "array",
+            "items": { "type": "string" },
+            "example": ["James Clear"]
+          },
+          "price": {
+            "type": "number",
+            "example": 100
+          },
+          "publisher": {
+            "type": "string",
+            "example": "Hamdard"
+          }
+        }
+      },
+
+      "Auth": {
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "user@example.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "123456"
+          }
+        }
+      },
+
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": false
+          },
+          "message": {
+            "type": "string",
+            "example": "Something went wrong"
+          }
+        }
+      }
+    },
+
+    "responses": {
+      "BadRequest": {
+        "description": "Validation Error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            },
+            "example": {
+              "success": false,
+              "message": "Validation failed"
+            }
+          }
+        }
+      },
+
+      "Unauthorized": {
+        "description": "Unauthorized",
+        "content": {
+          "application/json": {
+            "example": {
+              "success": false,
+              "message": "Unauthorized access"
+            }
+          }
+        }
+      },
+
+      "NotFound": {
+        "description": "Resource Not Found",
+        "content": {
+          "application/json": {
+            "example": {
+              "success": false,
+              "message": "Record not found"
+            }
+          }
+        }
+      },
+
+      "Conflict": {
+        "description": "Duplicate Record",
+        "content": {
+          "application/json": {
+            "example": {
+              "success": false,
+              "message": "Duplicate record"
+            }
+          }
+        }
+      },
+
+      "ServerError": {
+        "description": "Internal Server Error",
+        "content": {
+          "application/json": {
+            "example": {
+              "success": false,
+              "message": "Internal Server Error"
+            }
+          }
+        }
+      }
+    }
+  },
+
   "paths": {
     "/": {
       "get": {
         "summary": "Welcome dashboard",
-        "description": "Welcome message of dashboard to check api working",
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Success",
             "content": {
               "text/plain": {
-                "schema": {
-                  "type": "string",
-                  "example": "Welcome to Api"
-                }
+                "example": "Welcome to dashboard"
               }
             }
           }
         }
       }
     },
-    "/api/book": {
+
+    "/auth/register": {
       "post": {
-        "summary": "Creating Book in database",
-        "description": "When you hit this route you need to give json input body of data that you want to store on database ",
+        "summary": "Register user",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "required": ["bookName", "author", "price", "publisher"],
-                "properties": {
-                  "bookName": {
-                    "type": "string",
-                    "example": "Atomic Habbits"
-                  },
-                  "author": {
-                    "type": "array",
-                    "'items": { "type": "string" },
-                    "example": ["james clear"]
-                  },
-                  "price": {
-                    "type": "number",
-                    "example": "100"
-                  },
-                  "publisher": {
-                    "type": "string",
-                    "example": "Hamdard publisher"
-                  }
-                }
+                "$ref": "#/components/schemas/Auth"
               }
             }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User registered successfully"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
           }
         }
       }
     },
-    "responses": {
-      "201": {
-        "description": "Book Created succesfully",
-        "content": {
-          "application/json": {
-            "example": {
-              "messaage": "Book created succesfully",
-              "data": {
-                "id": 1,
-                "bookName": "Atomic Habbit",
-                "price": 100,
-                "author": [
-                  "name" : "james clear",
-                ]
+
+    "/auth/login": {
+      "post": {
+        "summary": "Login user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Auth"
               }
             }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "JWT token",
+            "content": {
+              "application/json": {
+                "example": {
+                  "token": "your.jwt.token"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+
+    "/api/book": {
+      "post": {
+        "summary": "Create book",
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBook"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Book created successfully"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      },
+
+      "get": {
+        "summary": "Get all books",
+        "parameters": [
+          { "name": "page", "in": "query", "schema": { "type": "integer" } },
+          { "name": "limit", "in": "query", "schema": { "type": "integer" } },
+          { "name": "author", "in": "query", "schema": { "type": "string" } },
+          { "name": "minPrice", "in": "query", "schema": { "type": "number" } },
+          { "name": "maxPrice", "in": "query", "schema": { "type": "number" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Books fetched successfully"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+
+    "/api/book/{id}": {
+      "get": {
+        "summary": "Get book by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Book fetched"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      },
+
+      "put": {
+        "summary": "Update book",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBook"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated successfully"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      },
+
+      "delete": {
+        "summary": "Delete book",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deleted successfully"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
           }
         }
       }
