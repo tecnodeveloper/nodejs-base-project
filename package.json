@@ -1,0 +1,49 @@
+{
+  "name": "nodejs-base-project",
+  "version": "1.0.0",
+  "description": "This project is all about practice production-level skills into your project like swagger.json, express, docker, git/github",
+  "homepage": "https://github.com/tecnodeveloper/nodejs-base-project#readme",
+  "bugs": {
+    "url": "https://github.com/tecnodeveloper/nodejs-base-project/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tecnodeveloper/nodejs-base-project.git"
+  },
+  "license": "ISC",
+  "author": "Zain Ali",
+  "type": "module",
+  "main": "app.js",
+  "scripts": {
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon",
+    "start": "nodemon app.js",
+    "prepare": "husky",
+    "prisma:migrate": "npx prisma migrate dev",
+    "prisma:generate": "npx prisma generate"
+  },
+  "dependencies": {
+    "@prisma/client": "^7.8.0",
+    "express": "^5.2.1",
+    "fs": "^0.0.1-security",
+    "path": "^0.12.7",
+    "swagger": "^0.7.5",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.3.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.5",
+    "globals": "^17.6.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.4.0",
+    "nodemon": "^3.1.14",
+    "prettier": "^3.8.3",
+    "prisma": "^7.8.0"
+  }
+}

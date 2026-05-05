@@ -1,0 +1,35 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Health Check API",
+    "version": "1.0.0",
+    "description": "Simple API to check if the site is healthy."
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "summary": "Check site health",
+        "description": "Returns a status message indicating that the site is healthy.",
+        "responses": {
+          "200": {
+            "description": "Site is healthy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Healthy"
+                    }
+                  },
+                  "required": ["status"]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
