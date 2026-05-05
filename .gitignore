@@ -1,0 +1,20 @@
+# Dependencies
+node_modules/
+
+# Environment variables (Crucial for security)
+.env
+
+# Prisma / SQLite
+# Exclude the actual database file, but keep the schema
+dev.db
+dev.db-journal
+
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS metadata
+.DS_Store
+
