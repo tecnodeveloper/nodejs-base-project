@@ -1,10 +1,12 @@
 import express from 'express';
-import swaggerUi from 'swagger-ui-express';
-import swaggerDocument from '../nodejs-base-project/swagger.json' with { type: 'json' };
 const app = express();
-app.get('/health', (req, res) => {
-  res.status(200).json({ message: 'Your site is health' });
-});
+import swaggerUi from 'swagger-ui-express';
+import swaggerDocument from './swagger.json' with { type: 'json' };
+import router from './src/routes/book.routes.js';
+app.use(express.json());
+
+// base route
+app.use('/books', router);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 

@@ -5,7 +5,7 @@ Includes Prisma ORM with SQLite, Swagger docs, linting, formatting, and Docker s
 
 ---
 
-## 🚀 Features
+## Features
 
 - Express server with basic folder structure
 - Health check endpoint (`/health`)
@@ -32,7 +32,7 @@ Includes Prisma ORM with SQLite, Swagger docs, linting, formatting, and Docker s
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 
@@ -112,7 +112,7 @@ model Book {
 
 ---
 
-## 🧹 Linting & Formatting
+## Linting & Formatting
 
 ### Check lint
 
@@ -193,3 +193,77 @@ PORT=3000
 - Dockerized
 
 ---
+
+## Books API
+
+```
+POST /books ""Endpoint**
+```
+
+**Description:**
+Creates a new book with multiple authors and stores it in the database.
+
+---
+
+### Request Body
+
+```json
+{
+  "name": "Atomic Habits",
+  "authors": ["Zain", "Chris"],
+  "price": 100,
+  "publisher": "Humdard Publisher"
+}
+```
+
+---
+
+### Validation Rules
+
+- `name` → required (string)
+- `authors` → required (array of strings)
+- `price` → required (number, must be ≥ 0)
+- `publisher` → optional (string)
+
+---
+
+### Responses
+
+#### 201 - Created
+
+```json
+{
+  "id": 1,
+  "name": "Atomic Habits",
+  "price": 100,
+  "publisher": "Humdard Publisher",
+  "authors": [{ "name": "Zain" }, { "name": "Chris" }]
+}
+```
+
+---
+
+#### 400 - Bad Request
+
+```json
+{
+  "error": "Validation failed",
+  "details": "Invalid input data"
+}
+```
+
+---
+
+## Testing the API
+
+You can test the API using:
+
+- Swagger UI → `http://localhost:3000/api-docs`
+- Postman / Thunder Client
+
+---
+
+## Notes
+
+- Ensure `express.json()` middleware is enabled
+- Request body must match validation schema
