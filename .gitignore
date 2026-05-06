@@ -6,7 +6,6 @@ node_modules/
 
 # Prisma / SQLite / Prisma migrations
 
-prisma/migrations/
 generated/
 
 # Exclude the actual database file, but keep the schema
