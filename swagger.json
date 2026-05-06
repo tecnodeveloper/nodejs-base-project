@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "title": "Health Check API",
+    "title": "Health Check & Books API",
     "version": "1.0.0",
-    "description": "Simple API to check if the site is healthy."
+    "description": "API for health check and book management."
   },
   "paths": {
     "/health": {
@@ -24,6 +24,93 @@
                     }
                   },
                   "required": ["status"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/books": {
+      "post": {
+        "summary": "Create a new book",
+        "description": "Creates a book with authors and stores it in the database.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "Atomic Habits"
+                  },
+                  "authors": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "example": ["Zain", "Chris"]
+                  },
+                  "price": {
+                    "type": "number",
+                    "example": 100
+                  },
+                  "publisher": {
+                    "type": "string",
+                    "example": "Humdard Publisher"
+                  }
+                },
+                "required": ["name", "authors", "price"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Book created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "clx123abc"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "price": {
+                      "type": "number"
+                    },
+                    "publisher": {
+                      "type": "string"
+                    },
+                    "authors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request data",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "Validation failed",
+                  "details": "Invalid input data"
                 }
               }
             }

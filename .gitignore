@@ -4,7 +4,10 @@ node_modules/
 # Environment variables (Crucial for security)
 .env
 
-# Prisma / SQLite
+# Prisma / SQLite / Prisma migrations
+
+generated/
+
 # Exclude the actual database file, but keep the schema
 dev.db
 dev.db-journal
@@ -17,4 +20,5 @@ yarn-error.log*
 
 # OS metadata
 .DS_Store
+
 
