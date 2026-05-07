@@ -19,7 +19,7 @@ Includes Prisma ORM with SQLite, Swagger docs, linting, formatting, and Docker s
 
 ---
 
-## 🛠 Tech Stack
+## Tech Stack
 
 - **Node.js**
 - **Express**
@@ -237,18 +237,7 @@ Creates a new book with multiple authors and stores it in the database.
   "name": "Atomic Habits",
   "price": 100,
   "publisher": "Humdard Publisher",
-  "authors": [{ "name": "Zain" }, { "name": "Chris" }]
-}
-```
-
----
-
-#### 400 - Bad Request
-
-```json
-{
-  "error": "Validation failed",
-  "details": "Invalid input data"
+  "authors": [{ "name": "Anyone" }, { "name": "Chris" }]
 }
 ```
 
@@ -260,10 +249,3 @@ You can test the API using:
 
 - Swagger UI → `http://localhost:3000/api-docs`
 - Postman / Thunder Client
-
----
-
-## Notes
-
-- Ensure `express.json()` middleware is enabled
-- Request body must match validation schema
