@@ -117,6 +117,116 @@
           }
         }
       }
+    },
+    "/books/{id}": {
+      "put": {
+        "summary": "Update an existing book",
+        "description": "Updates book details by ID. If book is not found, returns 404.",
+
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID of the book to update",
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "Atomic Habits Updated"
+                  },
+                  "authors": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "example": ["Zain", "James Clear"]
+                  },
+                  "price": {
+                    "type": "number",
+                    "example": 120
+                  },
+                  "publisher": {
+                    "type": "string",
+                    "example": "Updated Publisher"
+                  }
+                }
+              }
+            }
+          }
+        },
+
+        "responses": {
+          "200": {
+            "description": "Book updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Book updated successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "price": {
+                          "type": "number"
+                        },
+                        "publisher": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+
+          "400": {
+            "description": "Invalid request data",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Invalid input or price cannot be negative"
+                }
+              }
+            }
+          },
+
+          "404": {
+            "description": "Book not found",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Book not found"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
