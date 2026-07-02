@@ -8,51 +8,21 @@ Includes Prisma ORM with SQLite, Swagger docs, linting, formatting, and Docker s
 ## Features
 
 - Express server with basic folder structure
-- Health check endpoint (`/health`)
 - SQLite database (file-based)
 - Prisma ORM integration
 - Swagger API documentation (`/api-docs`)
 - ESLint + Prettier setup
 - Pre-commit hooks with Husky + lint-staged
-- Nodemon for auto-reload
 - Docker support
 
 ---
 
 ## Tech Stack
 
-- **Node.js**
 - **Express**
 - **Prisma ORM**
 - **SQLite**
 - **Swagger (swagger-ui-express, swagger-jsdoc)**
-- **ESLint + Prettier**
-- **Husky + lint-staged**
-- **Docker**
-
----
-
-## Project Structure
-
-```
-
-.
-├── src/
-│   ├── routes/
-│   ├── controllers/
-│   ├── services/
-│   ├── middlewares/
-│   └── app.js
-├── prisma/
-│   └── schema.prisma
-├── .husky/
-├── .eslintrc
-├── .prettierrc
-├── Dockerfile
-├── package.json
-└── README.md
-
-```
 
 ---
 
@@ -94,20 +64,6 @@ npm run prisma:migrate
 
 ```bash
 npm run prisma:generate
-```
-
----
-
-## Prisma Model
-
-```prisma
-model Book {
-  id        Int     @id @default(autoincrement())
-  name      String
-  author    String
-  price     Float
-  publisher String?
-}
 ```
 
 ---
@@ -158,22 +114,6 @@ docker run -p 3000:3000 bookstore-api
 
 ---
 
-## Scripts
-
-```json
-"scripts": {
-  "start": "node src/server.js",
-  "dev": "nodemon src/server.js",
-  "lint": "eslint .",
-  "lint:fix": "eslint . --fix",
-  "format": "prettier --write .",
-  "prisma:migrate": "npx prisma migrate dev",
-  "prisma:generate": "npx prisma generate"
-}
-```
-
----
-
 ## Environment Variables
 
 Create a `.env` file:
@@ -185,61 +125,12 @@ PORT=3000
 
 ---
 
-## Status
-
-- Core setup complete
-- Database connected
-- Tooling configured
-- Dockerized
-
----
-
-## Books API
-
-```
-POST /books ""Endpoint**
-```
-
-**Description:**
-Creates a new book with multiple authors and stores it in the database.
-
----
-
-### Request Body
-
-```json
-{
-  "name": "Atomic Habits",
-  "authors": ["Zain", "Chris"],
-  "price": 100,
-  "publisher": "Humdard Publisher"
-}
-```
-
----
-
 ### Validation Rules
 
 - `name` → required (string)
 - `authors` → required (array of strings)
 - `price` → required (number, must be ≥ 0)
 - `publisher` → optional (string)
-
----
-
-### Responses
-
-#### 201 - Created
-
-```json
-{
-  "id": 1,
-  "name": "Atomic Habits",
-  "price": 100,
-  "publisher": "Humdard Publisher",
-  "authors": [{ "name": "Anyone" }, { "name": "Chris" }]
-}
-```
 
 ---
 
